@@ -13,7 +13,7 @@
  <nav class="site-header sticky-top py-1">
       <div class="container d-flex flex-column flex-md-row justify-content-between">
   <a class="py-2 d-none d-md-inline-block" href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
-  <a class="py-2 d-none d-md-inline-block" href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i> Profile</a>
+ <!--<a class="py-2 d-none d-md-inline-block" href="{{ url_for('profile') }}"><i class="fas fa-user-circle"></i> Profile</a>-->
   <a class="py-2 d-none d-md-inline-block" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
    </div>
     </nav>
@@ -32,25 +32,19 @@
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <i class="fas fa-shopping-cart"></i>
-                  Orders
+                  Subscription
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ url_for('index') }}">
     <i class="fas fa-shopping-cart"></i>
-                  Products
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <i class="fas fa-users"></i>
-                  Customers
+                  Summary
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">
                   <i class="fas fa-download"></i>
-                  Reports
+                  Headlines
                 </a>
               </li>
             </ul>

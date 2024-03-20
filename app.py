@@ -3,8 +3,11 @@ import psycopg2 #pip install psycopg2
 import psycopg2.extras
 import re 
 from werkzeug.security import generate_password_hash, check_password_hash
+from scraper import scraper
+from summarizer import summarizer, estimated_reading_time
  
 app = Flask(__name__)
+app.config["JSON_AS_ASCII"] = False
 app.secret_key = 'cairocoders-ednalan'
  
 DB_HOST = "localhost"
@@ -26,6 +29,8 @@ def home():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute("ROLLBACK")
+    conn.commit()
    
     # Check if "username" and "password" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -61,6 +66,8 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute("ROLLBACK")
+    conn.commit()
  
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
@@ -109,6 +116,8 @@ def logout():
 @app.route('/profile')
 def profile(): 
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cursor.execute("ROLLBACK")
+    conn.commit()
    
     # Check if user is loggedin
     if 'loggedin' in session:
@@ -118,6 +127,22 @@ def profile():
         return render_template('profile.html', account=account)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
+@app.route("/", methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        url = request.form.get('url')
+
+        try:
+            article_title, text = scraper(url)
+            summary = summarizer(text)
+            reading_time = estimated_reading_time(summary.split())
+            return render_template("index.html", article_title = article_title, reading_time = reading_time, summary = summary)
+        
+        except TypeError:
+            print('Invalid url entered')
+
+    else: 
+        return render_template("index.html")
  
 if __name__ == "__main__":
     app.run(debug=True)
