@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang=en>
 
 <head>
@@ -22,5 +22,45 @@
         <label class='article_title'> {{ article_title }} {{reading_time}} </label> <br>
         <textarea> {{ summary }} </textarea>
     </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+</head>
+<body>
+    <h1>Index Page</h1>
+    <form action="/index" method="post">
+        <label for="date">Select Date:</label>
+        <select name="date" id="date">
+            <option value="2024-03-16">2024-03-16</option>
+            <option value="2024-03-14">2024-03-14</option>
+            <option value="Today">Today</option>
+            <!-- Add more options for different dates -->
+        </select>
+        <br><br>
+        <label for="category">Select Category:</label>
+        <select name="category" id="category">
+            <option value="politics">Politics</option>
+            <option value="sports">Sports</option>
+            <option value="All">All</option>
+            <!-- Add more options for different categories -->
+        </select>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <hr>
+    {% if summaries %}
+        <h2>Today's Highlights</h2>
+        {% for summary in summaries %}
+            <h3>{{ summary.article_title }}</h3>
+            <p>Reading Time: {{ summary.reading_time }}</p>
+            <p>{{ summary.summary }}</p>
+            <hr>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>

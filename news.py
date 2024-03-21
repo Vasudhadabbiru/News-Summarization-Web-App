@@ -90,31 +90,68 @@ def profile():
         return render_template('profile.html', account=account)
     return redirect(url_for('login'))
 
+# @app.route("/index", methods=['GET', 'POST'])
+# def index():
+#     if 'loggedin' in session:
+#         # cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+#         # cursor.execute("SELECT * FROM editorials")
+#         # url_data = cursor.fetchone()
+#         if request.method == 'POST':
+#             url = request.form.get('url')
+#         # if url_data:
+#         #     # url_id = url_data['id']
+#         #     url = url_data['url']
+#             try:
+#                 article_title, text = scraper(url)
+#                 summary = summarizer(text)
+#                 # cursor.execute("UPDATE editorials SET summary = %s WHERE ", (summary, url_data['id']))
+#                 # conn.commit()
+#                 reading_time = estimated_reading_time(summary.split())
+#                 return render_template("index.html", article_title=article_title, reading_time=reading_time, summary=summary)
+#             except TypeError:
+#                 flash('Invalid URL entered')
+#                 return redirect(url_for('index'))
+#         else:
+#             return render_template("index.html")
+#     else:
+#         return redirect(url_for('login'))
+
+
+
 @app.route("/index", methods=['GET', 'POST'])
 def index():
     if 'loggedin' in session:
-        # cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-        # cursor.execute("SELECT * FROM editorials")
-        # url_data = cursor.fetchone()
         if request.method == 'POST':
-            url = request.form.get('url')
-        # if url_data:
-        #     # url_id = url_data['id']
-        #     url = url_data['url']
-            try:
-                article_title, text = scraper(url)
+            date = request.form.get('date')
+            category = request.form.get('category')
+
+            # Fetch rows from editorials table based on date and category
+            cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            if category == 'all':
+                cursor.execute("SELECT * FROM editorials WHERE dt = %s", (date,))
+            else:
+                cursor.execute("SELECT * FROM editorials WHERE dt = %s AND category = %s", (date, category))
+            # cursor.execute("SELECT * FROM editorials WHERE dt = %s AND category = %s", (date, category))
+            rows = cursor.fetchall()
+
+            summaries = []
+            for row in rows:
+                article_title, text = scraper(row['url'])
                 summary = summarizer(text)
-                # cursor.execute("UPDATE editorials SET summary = %s WHERE ", (summary, url_data['id']))
-                # conn.commit()
-                reading_time = estimated_reading_time(summary.split())
-                return render_template("index.html", article_title=article_title, reading_time=reading_time, summary=summary)
-            except TypeError:
-                flash('Invalid URL entered')
-                return redirect(url_for('index'))
+                summaries.append({
+                    'article_title': article_title,
+                    'summary': summary,
+                    'reading_time': estimated_reading_time(summary.split())
+                })
+
+            return render_template("index.html", summaries=summaries)
+
         else:
             return render_template("index.html")
     else:
         return redirect(url_for('login'))
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
