@@ -93,12 +93,19 @@ def profile():
 @app.route("/index", methods=['GET', 'POST'])
 def index():
     if 'loggedin' in session:
+        # cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        # cursor.execute("SELECT * FROM editorials")
+        # url_data = cursor.fetchone()
         if request.method == 'POST':
             url = request.form.get('url')
-
+        # if url_data:
+        #     # url_id = url_data['id']
+        #     url = url_data['url']
             try:
                 article_title, text = scraper(url)
                 summary = summarizer(text)
+                # cursor.execute("UPDATE editorials SET summary = %s WHERE ", (summary, url_data['id']))
+                # conn.commit()
                 reading_time = estimated_reading_time(summary.split())
                 return render_template("index.html", article_title=article_title, reading_time=reading_time, summary=summary)
             except TypeError:
