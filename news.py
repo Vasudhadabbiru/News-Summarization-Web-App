@@ -127,7 +127,7 @@ def index():
 
             # Fetch rows from editorials table based on date and category
             cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-            if category == 'all':
+            if category == 'All':
                 cursor.execute("SELECT * FROM editorials WHERE dt = %s", (date,))
             else:
                 cursor.execute("SELECT * FROM editorials WHERE dt = %s AND category = %s", (date, category))

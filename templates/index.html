@@ -29,16 +29,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+    <title>Today's Highlights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+    <!--<link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css.html">-->
 </head>
 <body>
-    <h1>Index Page</h1>
+    <h1>Today's Highlights</h1>
     <form action="/index" method="post">
         <label for="date">Select Date:</label>
         <select name="date" id="date">
-            <option value="2024-03-16">2024-03-16</option>
             <option value="2024-03-14">2024-03-14</option>
-            <option value="Today">Today</option>
+            <option value="2024-03-15">2024-03-15</option>
+            <option value="2024-03-16">2024-03-16</option>
+            <option value="2024-03-17">2024-03-17</option>
+            <option value="2024-03-18">2024-03-18</option>
+            <option value="2024-03-19">2024-03-19</option>
+            <option value="2024-03-20">2024-03-20</option>
             <!-- Add more options for different dates -->
         </select>
         <br><br>
